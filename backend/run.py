@@ -3,17 +3,18 @@ from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from sqlalchemy import text
-
 from app.core.database import engine, get_db, Base
 from app.core.config import settings
-
 from app.api.auth.controllers import router as auth_router
 from app.api.inventario.controllers import router as inventario_router
 from app.api.compras.controllers import router as compras_router
 from app.api.ventas.controllers import router as ventas_router
 from app.api.logistica.controllers import router as logistica_router
 from app.api.productos.controllers import router as productos_router
-from app.api.roles.controllers import router as roles_router      # ← NUEVO
+from app.api.roles.controllers import router as roles_router
+from app.api.empleados.controllers import router as empleados_router
+from app.api.clientes.controllers import router as clientes_router
+from app.api.proveedores.controllers import router as proveedores_router
 
 app = FastAPI(
     title=settings.app_name,
@@ -23,6 +24,9 @@ app = FastAPI(
         {"name": "General"},
         {"name": "Autenticación"},
         {"name": "Roles & Permisos"},
+        {"name": "Empleados"},
+        {"name": "Clientes"},
+        {"name": "Proveedores"},
         {"name": "Productos"},
         {"name": "Inventario"},
         {"name": "Compras"},
@@ -40,7 +44,10 @@ app.add_middleware(
 )
 
 app.include_router(auth_router)
-app.include_router(roles_router)                                   # ← NUEVO
+app.include_router(roles_router)
+app.include_router(empleados_router)
+app.include_router(clientes_router)
+app.include_router(proveedores_router)
 app.include_router(productos_router)
 app.include_router(inventario_router)
 app.include_router(compras_router)
