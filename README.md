@@ -79,6 +79,30 @@ Una vez que el servidor esté corriendo, puedes acceder a la documentación inte
 * **Swagger UI:** `http://localhost:8000/docs`
 * **ReDoc:** `http://localhost:8000/redoc`
 
+## 🧠 Decisiones de Arquitectura y Patrones
+
+Para este proyecto, se tomó la decisión consciente de alejarse de la estructura monolítica tradicional (donde las consultas a la base de datos están mezcladas con las rutas) y se implementó un diseño orientado al dominio:
+
+* **Separation of Concerns (SoC):** Cada capa tiene una única responsabilidad. Si cambiamos de base de datos mañana, los Controladores y Servicios no se enterarán, ya que solo interactúan con interfaces abstractas.
+* **Patrón Repositorio:** Centraliza la lógica de acceso a datos. Evita la duplicación de consultas SQL (a través del ORM) y facilita la creación de pruebas unitarias al permitir inyectar bases de datos en memoria (mocking).
+* **Inyección de Dependencias:** Utilizada a través de FastAPI (`Depends`), permite una gestión segura y eficiente del ciclo de vida de las conexiones a la base de datos por cada petición.
+
+## 🚦 Estado del Proyecto (Roadmap)
+
+Este sistema se encuentra en desarrollo activo. A continuación, el progreso de los módulos principales:
+
+- [x] **Arquitectura Base:** Configuración de ORM, migraciones (Alembic) y variables de entorno.
+- [x] **Módulo de Inventario:** CRUD completo de Productos, Categorías y Marcas.
+- [x] **Esquemas de Seguridad:** Validación estricta de datos de entrada/salida con Pydantic.
+- [ ] **Módulo de Autenticación:** Implementación de JWT (JSON Web Tokens) y control de accesos basados en Roles (RBAC).
+- [ ] **Módulo de Ventas/Compras:** Transacciones lógicas que afecten el stock en tiempo real.
+- [ ] **Cobertura de Pruebas:** Implementación de tests unitarios y de integración.
+
+## 🧪 Pruebas Unitarias e Integración (Próximamente)
+
+La arquitectura de este proyecto está diseñada para ser altamente testeable. En las próximas fases se integrará **Pytest** para evaluar:
+1.  **Lógica de Negocio (Servicios):** Verificación de reglas (ej. no permitir stock negativo).
+2.  **Endpoints (Controladores):** Pruebas de integración simulando peticiones HTTP con `TestClient` de FastAPI.
 ---
 
 ## ✒️ Autores
