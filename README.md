@@ -42,7 +42,7 @@ El backend está organizado de forma modular, incluyendo:
 
 1.  **Clonar el repositorio:**
     ```bash
-    git clone https://github.com/tu-usuario/proyecto-erp.git
+    git clone https://github.com/Ache2503/ERP-logist.git
     cd proyecto-erp/backend
     ```
 
