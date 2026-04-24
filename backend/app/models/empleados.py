@@ -5,7 +5,6 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.database import Base
 
 class Empleados(Base):
-
     __tablename__ = 'empleados'
     __table_args__ = (
         Index('email', 'email', unique=True),
@@ -34,3 +33,4 @@ class Empleados(Base):
     pedidos_proveedores: Mapped[list['PedidosProveedores']] = relationship('PedidosProveedores', back_populates='empleados')
     traslados_internos: Mapped[list['TrasladosInternos']] = relationship('TrasladosInternos', back_populates='empleados')
     envios: Mapped[list['Envios']] = relationship('Envios', back_populates='empleados')
+    conductores: Mapped[list['Conductores']] = relationship('Conductores', back_populates='empleados')

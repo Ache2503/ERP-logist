@@ -3,7 +3,6 @@ from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from sqlalchemy import text
-
 from app.core.database import engine, get_db, Base
 from app.core.config import settings
 
@@ -22,7 +21,7 @@ from app.api.marcas.controllers import router as marcas_router
 from app.api.unidades_medida.controllers import router as unidades_medida_router
 from app.api.tipos_almacen.controllers import router as tipos_almacen_router
 from app.api.almacenes.controllers import router as almacenes_router
-from app.api.tipos_vehiculo.controllers import router as tipos_vehiculo_router
+from app.api.tipos_vehiculos.controllers import router as tipos_vehiculo_router
 from app.api.vehiculos.controllers import router as vehiculos_router
 
 app = FastAPI(

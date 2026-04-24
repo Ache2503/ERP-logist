@@ -23,7 +23,7 @@ class EmpleadoService:
         data = self.repo.get_all(skip, limit)
         total = self.repo.get_total()
         return EmpleadoListResponse(
-            total=total, skip=skip, limit=limit,
+            total = total, skip=skip, limit=limit,
             data=[EmpleadoResponse.model_validate(e) for e in data],
         )
 
