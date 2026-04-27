@@ -7,11 +7,11 @@ class TiposAlmacen(Base):
 
     __tablename__ = 'tipos_almacen'
     __table_args__ = (
-        Index('nombre_tipo', 'nombre_tipo', unique=True),
+        Index('nombre', 'nombre', unique=True),
     )
 
     id_tipo_almacen: Mapped[int] = mapped_column(Integer, primary_key=True)
-    nombre_tipo: Mapped[str] = mapped_column(String(50), nullable=False)
+    nombre: Mapped[str] = mapped_column(String(50), nullable=False)
     descripcion: Mapped[Optional[str]] = mapped_column(Text)
 
     almacenes: Mapped[list['Almacenes']] = relationship('Almacenes', back_populates='tipos_almacen')

@@ -75,7 +75,6 @@ def eliminar(id_empleado: int, db: Session = Depends(get_db)):
 
 
 # ── Estatus rápido ────────────────────────────────────────────────
-
 @router.patch("/{id_empleado}/activar", response_model=EmpleadoResponse,
               summary="Activar empleado")
 def activar(id_empleado: int, db: Session = Depends(get_db)):
@@ -89,7 +88,6 @@ def desactivar(id_empleado: int, db: Session = Depends(get_db)):
 
 
 # ── Roles del empleado ────────────────────────────────────────────
-
 @router.get("/{id_empleado}/roles", response_model=list[EmpleadoRolResponse],
             summary="Ver roles asignados al empleado")
 def roles(id_empleado: int, db: Session = Depends(get_db)):

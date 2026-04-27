@@ -4,6 +4,7 @@ from .backups import Backups
 from .categoria_padre import CategoriaPadre
 from .clientes import Clientes
 from .configuracion import Configuracion
+from .conductores import Conductores
 from .empleados import Empleados
 from .marcas import Marcas
 from .permisos import Permisos

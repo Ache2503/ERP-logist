@@ -21,7 +21,7 @@ from app.models.tipos_almacen import TiposAlmacen
 from app.models.unidades_medida import UnidadesMedida
 from app.models.almacenes import Almacenes
 from app.models.auditoria import Auditoria
-from app.models.categorias import Categorias
+from backend.app.models.categorias import Categorias
 from app.models.empleado_rol import EmpleadoRol
 from app.models.movimiento import Movimiento
 from app.models.proveedor_contacto import ProveedorContacto

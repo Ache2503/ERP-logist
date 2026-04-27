@@ -20,4 +20,3 @@ class Categorias(Base):
 
     categoria_padre: Mapped[Optional['CategoriaPadre']] = relationship('CategoriaPadre', back_populates='categorias')
     productos: Mapped[list['Productos']] = relationship('Productos', back_populates='categorias')
-

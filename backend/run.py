@@ -5,10 +5,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 from app.core.database import engine, get_db, Base
 from app.core.config import settings
-
 from app.api.auth.controllers import router as auth_router
-from app.api.inventario.controllers import router as inventario_router
-from app.api.compras.controllers import router as compras_router
 from app.api.ventas.controllers import router as ventas_router
 from app.api.logistica.controllers import router as logistica_router
 from app.api.productos.controllers import router as productos_router
@@ -50,7 +47,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.allowed_origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -69,8 +66,6 @@ app.include_router(almacenes_router)
 app.include_router(tipos_vehiculo_router)
 app.include_router(vehiculos_router)
 app.include_router(productos_router)
-app.include_router(inventario_router)
-app.include_router(compras_router)
 app.include_router(ventas_router)
 app.include_router(logistica_router)
 
