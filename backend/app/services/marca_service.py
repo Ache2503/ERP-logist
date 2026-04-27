@@ -22,7 +22,7 @@ class MarcaService:
         """
         Create a new brand in the database.
         """
-        db_marca = Marcas(**marca_create.dict())
+        db_marca = (Marcas(**marca_create.model_dump()))
         self.repo.create(db_marca)
         return db_marca
 

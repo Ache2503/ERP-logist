@@ -6,7 +6,7 @@ from typing import Optional
 
 
 class TipoVehiculoBase(BaseModel):
-    nombre_tipo: str = Field(..., min_length=1, max_length=50)
+    nombre: str = Field(..., min_length=1, max_length=50)
     capacidad_ton: float = Field(..., gt=0, description="Capacidad en toneladas")
     descripcion: Optional[str] = None
 
@@ -16,7 +16,7 @@ class TipoVehiculoCreate(TipoVehiculoBase):
 
 
 class TipoVehiculoUpdate(BaseModel):
-    nombre_tipo: Optional[str] = Field(None, min_length=1, max_length=50)
+    nombre: Optional[str] = Field(None, min_length=1, max_length=50)
     capacidad_ton: Optional[float] = Field(None, gt=0)
     descripcion: Optional[str] = None
 

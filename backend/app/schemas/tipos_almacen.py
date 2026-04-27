@@ -6,7 +6,7 @@ from typing import Optional
 
 
 class TipoAlmacenBase(BaseModel):
-    nombre_tipo: str = Field(..., min_length=1, max_length=50)
+    nombre: str = Field(..., min_length=1, max_length=50)
     descripcion: Optional[str] = None
 
 
@@ -15,7 +15,7 @@ class TipoAlmacenCreate(TipoAlmacenBase):
 
 
 class TipoAlmacenUpdate(BaseModel):
-    nombre_tipo: Optional[str] = Field(None, min_length=1, max_length=50)
+    nombre: Optional[str] = Field(None, min_length=1, max_length=50)
     descripcion: Optional[str] = None
 
 

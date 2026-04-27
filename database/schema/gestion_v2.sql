@@ -146,7 +146,7 @@ CREATE TABLE vehiculo (
 -- 3. TABLA CONDUCTOR (REFACTORIZADA - SIN DUPLICAR DATOS DE EMPLEADO)
 -- ========================================
 CREATE TABLE conductores (
-    id_conductor INT PRYMARY KEY AUTO_INCREMENT, 
+    id_conductor INT PRIMARY KEY AUTO_INCREMENT, 
     id_empleado INT NOT NULL, -- Clave primaria y foránea a la vez
     licencia_conducir VARCHAR(50) UNIQUE NOT NULL,
     FOREIGN KEY (id_empleado) REFERENCES empleados(id_empleado) ON DELETE CASCADE

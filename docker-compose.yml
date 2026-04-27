@@ -11,7 +11,7 @@ services:
       MYSQL_USER: erp_user
       MYSQL_PASSWORD: erp_pass
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
       - ./database/schema:/docker-entrypoint-initdb.d

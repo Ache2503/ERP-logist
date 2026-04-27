@@ -26,9 +26,9 @@ class TipoAlmacenRepository:
             TiposAlmacen.id_tipo_almacen == id_tipo_almacen
         ).first()
 
-    def get_by_nombre(self, nombre_tipo: str) -> Optional[TiposAlmacen]:
+    def get_by_nombre(self, nombre: str) -> Optional[TiposAlmacen]:
         return self.db.query(TiposAlmacen).filter(
-            TiposAlmacen.nombre_tipo == nombre_tipo
+            TiposAlmacen.nombre == nombre
         ).first()
 
     def create(self, data: TipoAlmacenCreate) -> TiposAlmacen:
