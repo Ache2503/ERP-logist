@@ -1,45 +1,52 @@
-"""
-Controllers — Marcas
-"""
-from fastapi import APIRouter, Depends, Query, status
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-
 from app.core.database import get_db
 from app.services.marca_service import MarcaService
-from app.schemas.marcas import (
-    MarcaCreate, MarcaUpdate,
-    MarcaResponse, MarcaListResponse,
-)
+from app.schemas.marcas import MarcaCreate, MarcaUpdate, MarcaResponse
 
 router = APIRouter(prefix="/marcas", tags=["Marcas"])
 
 
-@router.get("", response_model=MarcaListResponse, summary="Listar marcas")
-def listar(
-    skip: int  = Query(0, ge=0),
-    limit: int = Query(100, ge=1, le=500),
-    db: Session = Depends(get_db),
-):
-    return MarcaService(db).listar(skip, limit)
+@router.get("/", response_model=list[MarcaResponse])
+def listar(db: Session = Depends(get_db)):
+    service = MarcaService(db)
+    return service.listar()
 
 
-@router.post("", response_model=MarcaResponse,
-             status_code=status.HTTP_201_CREATED, summary="Crear marca")
+@router.get("/{marca_id}", response_model=MarcaResponse)
+def obtener(marca_id: int, db: Session = Depends(get_db)):
+    service = MarcaService(db)
+    marca = service.obtener(marca_id)
+
+    if not marca:
+        raise HTTPException(status_code=404, detail="Marca no encontrada")
+
+    return marca
+
+
+@router.post("/", response_model=MarcaResponse, status_code=201)
 def crear(data: MarcaCreate, db: Session = Depends(get_db)):
-    return MarcaService(db).crear(data)
+    service = MarcaService(db)
+    return service.crear(data)
 
 
-@router.get("/{id_marca}", response_model=MarcaResponse, summary="Obtener marca")
-def obtener(id_marca: int, db: Session = Depends(get_db)):
-    return MarcaService(db).obtener(id_marca)
+@router.put("/{marca_id}", response_model=MarcaResponse)
+def actualizar(marca_id: int, data: MarcaUpdate, db: Session = Depends(get_db)):
+    service = MarcaService(db)
+    marca = service.actualizar(marca_id, data)
+
+    if not marca:
+        raise HTTPException(status_code=404, detail="Marca no encontrada")
+
+    return marca
 
 
-@router.put("/{id_marca}", response_model=MarcaResponse, summary="Actualizar marca")
-def actualizar(id_marca: int, data: MarcaUpdate, db: Session = Depends(get_db)):
-    return MarcaService(db).actualizar(id_marca, data)
+@router.delete("/{marca_id}", status_code=204)
+def eliminar(marca_id: int, db: Session = Depends(get_db)):
+    service = MarcaService(db)
+    eliminado = service.eliminar(marca_id)
 
+    if not eliminado:
+        raise HTTPException(status_code=404, detail="Marca no encontrada")
 
-@router.delete("/{id_marca}", status_code=status.HTTP_204_NO_CONTENT,
-               summary="Eliminar marca")
-def eliminar(id_marca: int, db: Session = Depends(get_db)):
-    MarcaService(db).eliminar(id_marca)
+    return None

@@ -1,26 +1,61 @@
-"""Rutas del módulo de Ventas"""
-from fastapi import APIRouter
+"""
+Controllers — Ventas
+Venta directa a clientes
+"""
+from fastapi import APIRouter, Depends, Query, status, Path
+from sqlalchemy.orm import Session
 
-router = APIRouter(
-    prefix="/ventas",
-    tags=["Ventas"],
-    responses={404: {"description": "No encontrado"}},
+from app.core.database import get_db
+from app.services.venta_service import VentaService
+from app.schemas.ventas import (
+    VentaCreate, VentaUpdate,
+    VentaResponse, VentaConDetalles, VentaListResponse,
 )
 
-
-@router.get("")
-async def listar_ventas():
-    """Lista todas las ventas (por implementar)"""
-    return {"message": "Listar ventas - Por implementar"}
+router = APIRouter(prefix="/ventas", tags=["Ventas"])
 
 
-@router.post("")
-async def crear_venta():
-    """Crea una nueva venta (por implementar)"""
-    return {"message": "Crear venta - Por implementar"}
+@router.get("", response_model=VentaListResponse, summary="Listar ventas")
+def listar(
+    skip: int  = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=500),
+    db: Session = Depends(get_db),
+):
+    return VentaService(db).listar(skip, limit)
 
 
-@router.get("/{id}")
-async def obtener_venta(id: int):
-    """Obtiene una venta específica (por implementar)"""
-    return {"message": f"Obtener venta {id} - Por implementar"}
+@router.post("", response_model=VentaResponse,
+             status_code=status.HTTP_201_CREATED,
+             summary="Crear venta")
+def crear(data: VentaCreate, db: Session = Depends(get_db)):
+    return VentaService(db).crear(data)
+
+
+@router.get("/{id_venta}", response_model=VentaConDetalles,
+            summary="Obtener venta")
+def obtener(id_venta: int, db: Session = Depends(get_db)):
+    return VentaService(db).obtener(id_venta)
+
+
+@router.put("/{id_venta}", response_model=VentaResponse,
+            summary="Actualizar venta")
+def actualizar(id_venta: int, data: VentaUpdate,
+               db: Session = Depends(get_db)):
+    return VentaService(db).actualizar(id_venta, data)
+
+
+@router.delete("/{id_venta}", status_code=status.HTTP_204_NO_CONTENT,
+               summary="Eliminar venta")
+def eliminar(id_venta: int, db: Session = Depends(get_db)):
+    VentaService(db).eliminar(id_venta)
+
+
+@router.get("/cliente/{id_cliente}", response_model=list[VentaResponse],
+            summary="Listar ventas de un cliente")
+def listar_por_cliente(
+    id_cliente: int,
+    skip: int  = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=500),
+    db: Session = Depends(get_db),
+):
+    return VentaService(db).listar_por_cliente(id_cliente, skip, limit)

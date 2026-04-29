@@ -1,61 +1,43 @@
 """
-Schemas Pydantic — Productos
-Relaciones: categorias + marcas + unidades_medida
+Schemas Pydantic — Inventario
+Gestión de stock de productos
 """
 from pydantic import BaseModel, Field, ConfigDict
-from typing import Optional
-from decimal import Decimal
+from typing import Optional, TYPE_CHECKING
 
-from app.schemas.categorias import CategoriaResponse
-from app.schemas.marcas import MarcaResponse
-from app.schemas.unidades_medida import UnidadMedidaResponse
+if TYPE_CHECKING:
+    from app.schemas.productos import ProductoResponse
 
 
-class ProductoBase(BaseModel):
-    codigo: str = Field(..., min_length=1, max_length=50, description="Código único del producto")
-    nombre: str = Field(..., min_length=1, max_length=150)
-    descripcion: Optional[str] = None
-    id_categoria: int
-    id_marca: Optional[int] = None
-    id_unidad_medida: int
-    precio_compra: Decimal = Field(..., gt=0, decimal_places=2)
-    precio_venta: Decimal = Field(..., gt=0, decimal_places=2)
-    margen_ganancia: Optional[Decimal] = Field(None, description="% margen (calculado)")
-    peso: Optional[Decimal] = Field(None, gt=0, description="Peso en kg")
-    estado: str = Field(default="activo", description="activo, descontinuado, en_desarrollo")
+class InventarioBase(BaseModel):
+    id_producto: int
+    id_almacen: int
+    stock: int = Field(default=0, ge=0)
+    stock_minimo: int = Field(default=0, ge=0)
+    stock_maximo: int = Field(default=0, ge=0)
 
 
-class ProductoCreate(ProductoBase):
+class InventarioCreate(InventarioBase):
     pass
 
 
-class ProductoUpdate(BaseModel):
-    codigo: Optional[str] = Field(None, min_length=1, max_length=50)
-    nombre: Optional[str] = Field(None, min_length=1, max_length=150)
-    descripcion: Optional[str] = None
-    id_categoria: Optional[int] = None
-    id_marca: Optional[int] = None
-    id_unidad_medida: Optional[int] = None
-    precio_compra: Optional[Decimal] = Field(None, gt=0)
-    precio_venta: Optional[Decimal] = Field(None, gt=0)
-    peso: Optional[Decimal] = Field(None, gt=0)
-    estado: Optional[str] = None
+class InventarioUpdate(BaseModel):
+    stock: Optional[int] = Field(None, ge=0)
+    stock_minimo: Optional[int] = Field(None, ge=0)
+    stock_maximo: Optional[int] = Field(None, ge=0)
 
 
-class ProductoResponse(ProductoBase):
+class InventarioAjuste(BaseModel):
+    cantidad: int = Field(..., description="Cantidad a agregar (positiva) o restar (negativa)")
+
+
+class InventarioResponse(InventarioBase):
     model_config = ConfigDict(from_attributes=True)
-    id_producto: int
+    id_producto_almacen: int
 
 
-class ProductoConRelaciones(ProductoResponse):
-    """Producto con datos de categoría, marca y unidad."""
-    categoria: Optional[CategoriaResponse] = None
-    marca: Optional[MarcaResponse] = None
-    unidad_medida: Optional[UnidadMedidaResponse] = None
-
-
-class ProductoListResponse(BaseModel):
+class InventarioListResponse(BaseModel):
     total: int
     skip: int
     limit: int
-    data: list[ProductoResponse]
+    data: list[InventarioResponse]

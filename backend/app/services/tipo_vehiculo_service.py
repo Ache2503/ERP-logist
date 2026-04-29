@@ -34,10 +34,10 @@ class TipoVehiculoService:
         return TipoVehiculoResponse.model_validate(tv)
 
     def crear(self, data: TipoVehiculoCreate) -> TipoVehiculoResponse:
-        if self.repo.get_by_nombre(data.nombre_tipo):
+        if self.repo.get_by_nombre(data.nombre):
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
-                detail=f"Ya existe un tipo de vehículo con nombre '{data.nombre_tipo}'",
+                detail=f"Ya existe un tipo de vehículo con nombre '{data.nombre}'",
             )
         return TipoVehiculoResponse.model_validate(self.repo.create(data))
 
@@ -49,11 +49,11 @@ class TipoVehiculoService:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Tipo de vehículo {id_tipo_vehiculo} no encontrado",
             )
-        if data.nombre_tipo and data.nombre_tipo != tv.nombre_tipo:
-            if self.repo.get_by_nombre(data.nombre_tipo):
+        if data.nombre and data.nombre != tv.nombre:
+            if self.repo.get_by_nombre(data.nombre):
                 raise HTTPException(
                     status_code=status.HTTP_409_CONFLICT,
-                    detail=f"Ya existe un tipo de vehículo con nombre '{data.nombre_tipo}'",
+                    detail=f"Ya existe un tipo de vehículo con nombre '{data.nombre}'",
                 )
         return TipoVehiculoResponse.model_validate(self.repo.update(tv, data))
 

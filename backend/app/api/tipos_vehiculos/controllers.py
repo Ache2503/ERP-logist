@@ -19,3 +19,9 @@ def listar(
     db: Session = Depends(get_db),
 ):
     return TipoVehiculoService(db).listar(skip, limit)
+
+
+@router.post("", response_model=TipoVehiculoResponse,
+          status_code=status.HTTP_201_CREATED, summary="Crear tipo de vehículo")
+def crear(data: TipoVehiculoCreate, db: Session = Depends(get_db)):
+    return TipoVehiculoService(db).crear(data)

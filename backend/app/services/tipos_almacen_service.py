@@ -34,10 +34,10 @@ class TipoAlmacenService:
         return TipoAlmacenResponse.model_validate(t)
 
     def crear(self, data: TipoAlmacenCreate) -> TipoAlmacenResponse:
-        if self.repo.get_by_nombre(data.nombre_tipo):
+        if self.repo.get_by_nombre(data.nombre):
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
-                detail=f"Ya existe un tipo de almacén con nombre '{data.nombre_tipo}'",
+                detail=f"Ya existe un tipo de almacén con nombre '{data.nombre}'",
             )
         return TipoAlmacenResponse.model_validate(self.repo.create(data))
 
@@ -49,11 +49,11 @@ class TipoAlmacenService:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Tipo de almacén {id_tipo_almacen} no encontrado",
             )
-        if data.nombre_tipo and data.nombre_tipo != t.nombre_tipo:
-            if self.repo.get_by_nombre(data.nombre_tipo):
+        if data.nombre and data.nombre != t.nombre:
+            if self.repo.get_by_nombre(data.nombre):
                 raise HTTPException(
                     status_code=status.HTTP_409_CONFLICT,
-                    detail=f"Ya existe un tipo de almacén con nombre '{data.nombre_tipo}'",
+                    detail=f"Ya existe un tipo de almacén con nombre '{data.nombre}'",
                 )
         return TipoAlmacenResponse.model_validate(self.repo.update(t, data))
 

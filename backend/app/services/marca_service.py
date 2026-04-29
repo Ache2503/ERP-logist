@@ -14,47 +14,31 @@ class MarcaService:
     """
     Service class for handling brand-related operations.
     """
-
     def __init__(self, db: Session):
         self.repo = MarcaRepository(db)
 
-    def create_marca(self, marca_create: MarcaCreate) -> Marcas:
-        """
-        Create a new brand in the database.
-        """
-        db_marca = (Marcas(**marca_create.model_dump()))
+    def crear(self, data: MarcaCreate) -> Marcas:
+        db_marca = Marcas(**data.model_dump())
         self.repo.create(db_marca)
         return db_marca
 
-    def get_marca(self, marca_id: int) -> Optional[Marcas]:
-        """
-        Retrieve a brand by its ID.
-        """
-        return self.repo.get(marca_id)
+    def obtener(self, marca_id: int) -> Optional[Marcas]:
+        return self.repo.get_by_id(marca_id)
 
-    def get_marcas(self) -> List[Marcas]:
-        """
-        Retrieve all brands from the database.
-        """
-        return self.repo.list()
+    def listar(self) -> List[Marcas]:
+        return self.repo.get_all()
 
-    def update_marca(self, marca_id: int, marca_update: MarcaUpdate) -> Optional[Marcas]:
-        """
-        Update an existing brand's information.
-        """
-        db_marca = self.get_marca(marca_id)
+    def actualizar(self, marca_id: int, data: MarcaUpdate) -> Optional[Marcas]:
+        db_marca = self.obtener(marca_id)
         if not db_marca:
             return None
-        for key, value in marca_update.dict(exclude_unset=True).items():
+        for key, value in data.model_dump(exclude_unset=True).items():
             setattr(db_marca, key, value)
-        self.repo.update(db_marca)
+        self.repo.update(db_marca, data)
         return db_marca
 
-    def delete_marca(self, marca_id: int) -> bool:
-        """
-        Delete a brand from the database.
-        """
-        db_marca = self.get_marca(marca_id)
+    def eliminar(self, marca_id: int) -> bool:
+        db_marca = self.obtener(marca_id)
         if not db_marca:
             return False
         self.repo.delete(db_marca)

@@ -2,7 +2,7 @@
 Controllers — Compras
 Órdenes de compra a proveedores
 """
-from fastapi import APIRouter, Depends, Query, status
+from fastapi import APIRouter, Depends, Query, status, Path
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
@@ -80,7 +80,7 @@ def listar_por_proveedor(
 @router.get("/estado/{estado}", response_model=list[CompraResponse],
             summary="Listar compras por estado")
 def listar_por_estado(
-    estado: str = Query(..., description="pendiente/confirmada/entregada/cancelada"),
+    estado: str = Path(..., description="pendiente/confirmada/entregada/cancelada"),
     skip: int  = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=500),
     db: Session = Depends(get_db),

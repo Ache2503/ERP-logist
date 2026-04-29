@@ -25,8 +25,7 @@ class MarcaRepository:
     def get_by_nombre(self, nombre: str) -> Optional[Marcas]:
         return self.db.query(Marcas).filter(Marcas.nombre == nombre).first()
 
-    def create(self, data: MarcaCreate) -> Marcas:
-        marca = Marcas(**data.model_dump(exclude_none=True))
+    def create(self, marca: Marcas) -> Marcas:
         self.db.add(marca)
         self.db.commit()
         self.db.refresh(marca)
@@ -42,3 +41,7 @@ class MarcaRepository:
     def delete(self, marca: Marcas) -> None:
         self.db.delete(marca)
         self.db.commit()
+
+    def list(self) -> list[Marcas]:
+        return self.db.query(Marcas).all()
+    

@@ -20,6 +20,9 @@ from app.api.tipos_almacen.controllers import router as tipos_almacen_router
 from app.api.almacenes.controllers import router as almacenes_router
 from app.api.tipos_vehiculos.controllers import router as tipos_vehiculo_router
 from app.api.vehiculos.controllers import router as vehiculos_router
+from app.api.compras.controllers import router as compras_router
+from app.api.pedidos_clientes.controllers import router as pedidos_clientes_router
+from app.api.inventario.controllers import router as inventario_router
 
 app = FastAPI(
     title=settings.app_name,
@@ -42,6 +45,7 @@ app = FastAPI(
         {"name": "Compras"},
         {"name": "Ventas"},
         {"name": "Logística"},
+        {"name": "Pedidos Clientes"},
     ],
 )
 
@@ -68,6 +72,9 @@ app.include_router(vehiculos_router)
 app.include_router(productos_router)
 app.include_router(ventas_router)
 app.include_router(logistica_router)
+app.include_router(compras_router)
+app.include_router(pedidos_clientes_router)
+app.include_router(inventario_router)
 
 
 @app.get("/", tags=["General"])
