@@ -1,22 +1,65 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './hooks/useAuth';
+import ProtectedRoute from './components/ProtectedRoute';
+import LoginPage from './pages/LoginPage';
 import Layout from './components/Layout';
-import Dashboard from './pages/Dashboard';
+import DashboardPage from './pages/DashboardPage';
 import EmpleadosPage from './pages/EmpleadosPage';
-import ClientesPages from './pages/ClientesPage';
+import ClientesPage from './pages/ClientesPage';
+import ProductosPage from './pages/ProductosPage';
+import MarcasPage from './pages/MarcasPage';
+import CategoriasPage from './pages/CategoriasPage';
+import UnidadesMedidaPage from './pages/UnidadesMedidaPage';
+import AlmacenesPage from './pages/AlmacenesPage';
+import ProveedoresPage from './pages/ProveedoresPage';
+import VentasPage from './pages/VentasPage';
+import ComprasPage from './pages/ComprasPage';
+import PedidosClientesPage from './pages/PedidosClientesPage';
+import InventarioPage from './pages/InventarioPage';
+import LogisticaPage from './pages/LogisticaPage';
+import VehiculosPage from './pages/VehiculosPage';
+import TiposVehiculosPage from './pages/TiposVehiculosPage';
+import RolesPage from './pages/RolesPage';
+import PermisosPage from './pages/PermisosPage';
+import ConductoresPage from './pages/ConductoresPage';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* La ruta "/" usa el Layout como envoltorio */}
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="empleados" element={<EmpleadosPage />} />
-          <Route path="clientes" element={<ClientesPages />} />
-          {/* Próximamente: clientes, productos, etc. */}
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Layout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<DashboardPage />} />
+            <Route path="empleados" element={<EmpleadosPage />} />
+            <Route path="clientes" element={<ClientesPage />} />
+            <Route path="productos" element={<ProductosPage />} />
+            <Route path="marcas" element={<MarcasPage />} />
+            <Route path="categorias" element={<CategoriasPage />} />
+            <Route path="unidades-medida" element={<UnidadesMedidaPage />} />
+            <Route path="almacenes" element={<AlmacenesPage />} />
+            <Route path="proveedores" element={<ProveedoresPage />} />
+            <Route path="ventas" element={<VentasPage />} />
+            <Route path="compras" element={<ComprasPage />} />
+            <Route path="pedidos-clientes" element={<PedidosClientesPage />} />
+            <Route path="inventario" element={<InventarioPage />} />
+            <Route path="logistica" element={<LogisticaPage />} />
+            <Route path="vehiculos" element={<VehiculosPage />} />
+            <Route path="tipos-vehiculos" element={<TiposVehiculosPage />} />
+            <Route path="roles" element={<RolesPage />} />
+            <Route path="permisos" element={<PermisosPage />} />
+            <Route path="conductores" element={<ConductoresPage />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

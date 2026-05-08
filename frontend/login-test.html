@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ERP Login Test</title>
+  <style>
+    body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; background: #f3f4f6; }
+    .container { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 400px; }
+    h1 { text-align: center; color: #1f2937; }
+    .form-group { margin-bottom: 15px; }
+    label { display: block; margin-bottom: 5px; color: #374151; font-size: 14px; }
+    input { width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; box-sizing: border-box; }
+    button { width: 100%; padding: 10px; background: #2563eb; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+    button:hover { background: #1d4ed; }
+    .error { background: #fee2e2; border: 1px solid #fca5c5; color: #dc2626; padding: 10px; border-radius: 4px; margin-bottom: 15px; font-size: 14px; display: none; }
+    .success { background: #d1fae5; border: 1px solid #6ee7b7; color: #065f46; padding: 10px; border-radius: 4px; margin-bottom: 15px; font-size: 14px; display: none; }
+    .info { font-size: 12px; color: #6b7280; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>ERP Login Test</h1>
+    <div id="error" class="error"></div>
+    <div id="success" class="success"></div>
+    
+    <div class="form-group">
+      <label>Email:</label>
+      <input type="text" id="email" value="admin@erp.com">
+    </div>
+    
+    <div class="form-group">
+      <label>Contraseña:</label>
+      <input type="password" id="password" value="admin123">
+    </div>
+    
+    <button onclick="doLogin()">Iniciar Sesión</button>
+    
+    <div class="info">
+      <p><strong>Usuarios de prueba:</strong></p>
+      <p>admin@erp.com / admin123</p>
+      <p>juan@test.com / test123</p>
+    </div>
+  </div>
+
+  <script>
+    function doLogin() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const errorDiv = document.getElementById('error');
+      const successDiv = document.getElementById('success');
+      
+      errorDiv.style.display = 'none';
+      successDiv.style.display = 'none';
+      
+      console.log('=== INICIANDO LOGIN ===');
+      console.log('Email:', email);
+      console.log('Password:', password);
+      
+      fetch('http://localhost:8000/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      })
+      .then(res => {
+        console.log('Response status:', res.status);
+        return res.json();
+      })
+      .then(data => {
+        console.log('Response data:', data);
+        
+        if (data.access_token) {
+          localStorage.setItem('token', data.access_token);
+          localStorage.setItem('empleado', JSON.stringify(data.empleado));
+          
+          successDiv.textContent = '✅ Login exitoso! Token guardado.';
+          successDiv.style.display = 'block';
+          
+          console.log('✅ Login exitoso!');
+          console.log('Token:', data.access_token.substring(0, 50) + '...');
+          console.log('Empleado:', data.empleado);
+        } else {
+          throw new Error(data.detail || 'Error desconocido');
+        }
+      })
+      .catch(err => {
+        console.error('❌ Error:', err);
+        errorDiv.textContent = '❌ ' + err.message;
+        errorDiv.style.display = 'block';
+      });
+    }
+  </script>
+</body>
+</html>

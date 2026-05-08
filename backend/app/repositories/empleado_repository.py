@@ -63,7 +63,13 @@ class EmpleadoRepository:
         )
 
     def create(self, data: EmpleadoCreate) -> Empleados:
-        empleado = Empleados(**data.model_dump(exclude_none=True))
+        data_dict = data.model_dump(exclude_none=True)
+        # Hashear contraseña si se proporciona
+        password = data_dict.pop('password', None)
+        empleado = Empleados(**data_dict)
+        if password:
+            from app.core.security import get_password_hash
+            empleado.password_hash = get_password_hash(password)
         self.db.add(empleado)
         self.db.commit()
         self.db.refresh(empleado)
@@ -82,6 +88,13 @@ class EmpleadoRepository:
 
     def cambiar_estatus(self, empleado: Empleados, estatus: str) -> Empleados:
         empleado.estatus = estatus
+        self.db.commit()
+        self.db.refresh(empleado)
+        return empleado
+
+    def update_password(self, empleado: Empleados, password_hash: str) -> Empleados:
+        """Actualizar hash de contraseña"""
+        empleado.password_hash = password_hash
         self.db.commit()
         self.db.refresh(empleado)
         return empleado

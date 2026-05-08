@@ -16,6 +16,7 @@ class Empleados(Base):
     nombre: Mapped[str] = mapped_column(String(100), nullable=False)
     apellido: Mapped[str] = mapped_column(String(100), nullable=False)
     email: Mapped[str] = mapped_column(String(100), nullable=False)
+    password_hash: Mapped[Optional[str]] = mapped_column(String(255))
     estatus: Mapped[str] = mapped_column(String(20), nullable=False, server_default=text("'activo'"))
     fecha_registro: Mapped[datetime.date] = mapped_column(Date, nullable=False, server_default=text('(curdate())'))
     direccion: Mapped[Optional[str]] = mapped_column(String(200))

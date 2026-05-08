@@ -1,18 +1,20 @@
 # Sistema ERP - API REST
 
-Sistema de planificación de recursos empresariales completo con backend FastAPI y frontend.
+Sistema de planificación de recursos empresariales completo con backend FastAPI y frontend en React.
 
 ## Tabla de Contenidos
 
 1. [Descripción](#descripción)
 2. [Tech Stack](#tech-stack)
 3. [Estructura del Proyecto](#estructura-del-proyecto)
-4. [Endpoints Disponibles](#endpoints-disponibles)
-5. [Instalación](#instalación)
-6. [Configuración](#configuración)
-7. [Ejemplos de Uso](#ejemplos-de-uso)
-8. [Estados del Sistema](#estados-del-sistema)
-9. [Modelos de Base de Datos](#modelos-de-base-de-datos)
+4. [Autenticación](#autenticación)
+5. [Endpoints Disponibles](#endpoints-disponibles)
+6. [Instalación](#instalación)
+7. [Configuración](#configuración)
+8. [Frontend - Guía de Desarrollo](#frontend---guía-de-desarrollo)
+9. [Ejemplos de Uso](#ejemplos-de-uso)
+10. [Estados del Sistema](#estados-del-sistema)
+11. [Modelos de Base de Datos](#modelos-de-base-de-datos)
 
 ---
 
@@ -28,6 +30,8 @@ ERP (Enterprise Resource Planning) es un sistema completo para la gestión empre
 - **Logística** y seguimiento de envíos
 - **Gestión de empleados** con roles y permisos
 - **Sistema de transporte** flotas de vehículos
+- **Autenticación JWT** para empleados
+- **Dashboard personalizado** por usuario
 
 ---
 
@@ -45,6 +49,14 @@ ERP (Enterprise Resource Planning) es un sistema completo para la gestión empre
 | Passlib | 1.7.4 |
 | Alembic | 1.14.1 |
 
+### Frontend
+| Tecnología | Versión |
+|------------|---------|
+| React | 19.2.5 |
+| Vite | 8.0.10 |
+| Tailwind CSS | 3.4.19 |
+| React Router DOM | 7.14.2 |
+
 ### Base de Datos
 - **MySQL** - Base de datos relacional
 
@@ -57,20 +69,101 @@ proyecto-erp/
 ├── backend/                 # API REST
 │   ├── app/
 │   │   ├── api/          # Controladores (routes)
-│   │   ├── core/        # Configuración
-│   │   ├── models/      # Modelos SQLAlchemy
-│   │   ├── repositories/ # Acceso a datos
-│   │   ├── schemas/    # Schemas Pydantic
-│   │   ├── services/   # Lógica de negocio
-│   │   └── utils/      # Utilidades
+│   │   ├── core/         # Configuración, seguridad
+│   │   ├── models/       # Modelos SQLAlchemy
+│   │   ├── repositories/  # Acceso a datos
+│   │   ├── schemas/     # Schemas Pydantic
+│   │   ├── services/    # Lógica de negocio
+│   │   └── utils/       # Utilidades
 │   ├── migrations/       # Alembic
 │   ├── requirements.txt
 │   ├── run.py          # Entry point
 │   └── README.md
-├── frontend/               # Aplicación web (futuro)
+├── frontend/               # Aplicación web React
+│   ├── src/
+│   │   ├── components/  # Componentes reutilizables
+│   │   ├── hooks/       # Custom hooks (useApi, useAuth)
+│   │   ├── pages/       # Páginas del sistema
+│   │   └── App.jsx      # Configuración de rutas
+│   ├── FRONTEND_GUIDE.md  # Guía para desarrolladores
+│   └── README.md
 ├── docs/                # Documentación técnica
 └── README.md           # Este archivo
 ```
+
+---
+
+## Autenticación
+
+### Backend (JWT)
+
+El sistema utiliza JWT (JSON Web Tokens) para autenticar empleados.
+
+**Endpoint de Login:**
+```bash
+POST http://localhost:8000/auth/login
+Content-Type: application/json
+
+{
+  "email": "empleado@empresa.com",
+  "password": "contraseña123"
+}
+```
+
+**Respuesta:**
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "token_type": "bearer",
+  "empleado": {
+    "id_empleado": 1,
+    "nombre": "Juan",
+    "apellido": "Pérez",
+    "email": "juan@empresa.com",
+    "cargo": "Administrador"
+  }
+}
+```
+
+### Frontend
+
+- **LoginPage.jsx**: Página de inicio de sesión
+- **useAuth.jsx**: Hook personalizado para gestionar autenticación
+- **ProtectedRoute.jsx**: Componente para proteger rutas
+- **Dashboard personalizado**: Muestra información del empleado y estadísticas
+
+**Flujo:**
+1. Empleado inicia sesión con email y contraseña
+2. Se guarda el JWT en `localStorage`
+3. Se redirige al dashboard personalizado
+4. El empleado puede cerrar sesión desde el header
+
+---
+
+## Frontend - Guía de Desarrollo
+
+Para una guía completa de cómo agregar nuevos módulos y patrones de código, consultar:
+👉 **[frontend/FRONTEND_GUIDE.md](./frontend/FRONTEND_GUIDE.md)**
+
+### Inicio Rápido
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+El frontend estará disponible en: `http://localhost:5173`
+
+### Características Implementadas
+
+- ✅ Sistema de login con JWT
+- ✅ Rutas protegidas
+- ✅ Dashboard personalizado por empleado
+- ✅ Sidebar con navegación a todos los módulos
+- ✅ Tablas de datos con paginación para todos los módulos
+- ✅ Logout desde el header
+- ✅ Manejo de estado con Context API
 
 ---
 

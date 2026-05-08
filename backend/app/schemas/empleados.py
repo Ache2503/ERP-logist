@@ -19,6 +19,7 @@ class EmpleadoBase(BaseModel):
 
 
 class EmpleadoCreate(EmpleadoBase):
+    password: Optional[str] = Field(None, min_length=6)
     fecha_registro: Optional[datetime.date] = None
 
 
@@ -32,6 +33,18 @@ class EmpleadoUpdate(BaseModel):
     numero_seguridad_social: Optional[str] = Field(None, max_length=20)
     cargo: Optional[str] = Field(None, max_length=50)
     estatus: Optional[str] = Field(None, max_length=20)
+    password: Optional[str] = Field(None, min_length=6)
+
+
+class EmpleadoLogin(BaseModel):
+    email: EmailStr
+    password: str = Field(..., min_length=6)
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+    empleado: dict
 
 
 class EmpleadoResponse(EmpleadoBase):

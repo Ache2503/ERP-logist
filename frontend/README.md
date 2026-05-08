@@ -1,16 +1,71 @@
-# React + Vite
+# Frontend - ERP System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React + Vite + Tailwind CSS
 
-Currently, two official plugins are available:
+## 📚 Documentación
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Para una guía completa de desarrollo y cómo agregar nuevos módulos, consultar:
+👉 **[FRONTEND_GUIDE.md](./FRONTEND_GUIDE.md)**
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠 Tech Stack
 
-## Expanding the ESLint configuration
+- **React** 19.2.5
+- **Vite** 8.0.10
+- **Tailwind CSS** 3.4.19
+- **React Router DOM** 7.14.2
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🚀 Comandos
+
+```bash
+# Instalar dependencias
+npm install
+
+# Ejecutar en desarrollo
+npm run dev
+
+# Construir para producción
+npm run build
+
+# Linting
+npm run lint
+
+# Vista previa de producción
+npm run preview
+```
+
+---
+
+## 📁 Estructura
+
+```
+frontend/
+├── src/
+│   ├── components/       # Componentes reutilizables
+│   │   ├── DataTable.jsx    # Tabla genérica con paginación
+│   │   ├── Layout.jsx       # Estructura principal
+│   │   ├── Sidebar.jsx      # Menú lateral
+│   │   └── Header.jsx       # Barra superior
+│   ├── hooks/
+│   │   └── useApi.js        # Hook para consumir API
+│   ├── pages/           # Páginas del sistema
+│   ├── App.jsx          # Configuración de rutas
+│   └── main.jsx         # Entry point
+├── package.json
+├── vite.config.js
+├── tailwind.config.js
+└── FRONTEND_GUIDE.md    # Guía de desarrollo
+```
+
+---
+
+## 🔗 Backend API
+
+Asegúrate de que el backend esté corriendo en:
+- URL: `http://localhost:8000`
+- Documentación: `http://localhost:8000/docs`
+
+Consulta el archivo `/README.md` en la raíz para ver todos los endpoints disponibles.

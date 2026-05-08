@@ -10,6 +10,7 @@ from app.schemas.empleados import (
     EmpleadoCreate, EmpleadoUpdate,
     EmpleadoResponse, EmpleadoListResponse,
 )
+from app.core.security import verify_password, get_password_hash, create_access_token
 
 
 class EmpleadoService:
@@ -143,4 +144,39 @@ class EmpleadoService:
             )
         return EmpleadoResponse.model_validate(
             self.repo.cambiar_estatus(emp, "inactivo")
+        )
+
+    # ── Autenticación ─────────────────────────────────────────
+
+    def authenticate(self, email: str, password: str):
+        """Autenticar empleado por email y contraseña"""
+        empleado = self.repo.get_by_email(email)
+        if not empleado:
+            return None
+        if not empleado.password_hash:
+            return None
+        if not verify_password(password, empleado.password_hash):
+            return None
+        return empleado
+
+    def create_access_token(self, empleado) -> str:
+        """Crear JWT token para el empleado"""
+        data = {
+            "sub": str(empleado.id_empleado),
+            "email": empleado.email,
+            "nombre": f"{empleado.nombre} {empleado.apellido}"
+        }
+        return create_access_token(data)
+
+    def set_password(self, id_empleado: int, password: str) -> EmpleadoResponse:
+        """Establecer contraseña para un empleado"""
+        emp = self.repo.get_by_id(id_empleado)
+        if not emp:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Empleado {id_empleado} no encontrado",
+            )
+        hashed = get_password_hash(password)
+        return EmpleadoResponse.model_validate(
+            self.repo.update_password(emp, hashed)
         )

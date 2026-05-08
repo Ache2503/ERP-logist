@@ -23,6 +23,7 @@ from app.api.vehiculos.controllers import router as vehiculos_router
 from app.api.compras.controllers import router as compras_router
 from app.api.pedidos_clientes.controllers import router as pedidos_clientes_router
 from app.api.inventario.controllers import router as inventario_router
+from app.api.conductores.controllers import router as conductores_router
 
 app = FastAPI(
     title=settings.app_name,
@@ -75,6 +76,7 @@ app.include_router(logistica_router)
 app.include_router(compras_router)
 app.include_router(pedidos_clientes_router)
 app.include_router(inventario_router)
+app.include_router(conductores_router)
 
 
 @app.get("/", tags=["General"])
