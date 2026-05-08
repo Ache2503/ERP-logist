@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
+from app.core.security import require_role
 from app.services.proveedor_service import ProveedorService
 from app.schemas.proveedores import (
     ProveedorCreate, ProveedorUpdate,
@@ -12,7 +13,7 @@ from app.schemas.proveedores import (
     ContactoCreate, ContactoUpdate, ContactoResponse,
 )
 
-router = APIRouter(prefix="/proveedores", tags=["Proveedores"])
+router = APIRouter(prefix="/proveedores", tags=["Proveedores"], dependencies=[Depends(require_role(["Administrador","Contador","Gerente"]))])
 
 
 # ── CRUD Proveedor ───────────────────────────────────────────────

@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
+from app.core.security import require_role
 from app.services.tipos_almacen_service import TipoAlmacenService
 from app.schemas.tipos_almacen import (
     TipoAlmacenCreate, TipoAlmacenUpdate,

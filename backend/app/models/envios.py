@@ -31,4 +31,5 @@ class Envios(Base):
     envio_detalle: Mapped[list['EnvioDetalle']] = relationship('EnvioDetalle', back_populates='envios')
     ruta_envio: Mapped[list['RutaEnvio']] = relationship('RutaEnvio', back_populates='envios')
     seguimiento_envio: Mapped[list['SeguimientoEnvio']] = relationship('SeguimientoEnvio', back_populates='envios')
+    incidentes: Mapped[list['Incidentes']] = relationship('Incidentes', back_populates='envios')
 

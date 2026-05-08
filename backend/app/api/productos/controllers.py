@@ -3,12 +3,13 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from app.core.database import get_db
+from app.core.security import require_role
 from app.services.producto_service import ProductoService
 from app.schemas.producto import ProductoCreate, ProductoUpdate, ProductoResponse
 
-router = APIRouter(prefix="/productos", tags=["Productos"])
+router = APIRouter(prefix="/productos", tags=["Productos"], dependencies=[Depends(require_role(["Administrador","Vendedor","Almacenista","Gerente"]))])
 
-@router.post("/", response_model=ProductoResponse, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=ProductoResponse, status_code=status.HTTP_201_CREATED)
 def crear_producto(producto: ProductoCreate, db: Session = Depends(get_db)):
     service = ProductoService(db)
     return service.crear_producto(producto)
@@ -18,7 +19,7 @@ def obtener_producto(producto_id: int, db: Session = Depends(get_db)):
     service = ProductoService(db)
     return service.obtener_producto(producto_id)
 
-@router.get("/", response_model=List[ProductoResponse])
+@router.get("", response_model=List[ProductoResponse])
 def listar_productos(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),

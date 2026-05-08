@@ -5,13 +5,14 @@ from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
+from app.core.security import require_role
 from app.services.unidad_medida_service import UnidadMedidaService
 from app.schemas.unidades_medida import (
     UnidadMedidaCreate, UnidadMedidaUpdate,
     UnidadMedidaResponse, UnidadMedidaListResponse,
 )
 
-router = APIRouter(prefix="/unidades-medida", tags=["Unidades de Medida"])
+router = APIRouter(prefix="/unidades-medida", tags=["Unidades de Medida"], dependencies=[Depends(require_role(["Administrador","Vendedor","Almacenista","Gerente"]))])
 
 
 @router.get("", response_model=UnidadMedidaListResponse,

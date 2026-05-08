@@ -43,6 +43,7 @@ class VentaResponse(VentaBase):
     subtotal: Decimal
     impuesto: Decimal
     total: Decimal
+    estatus: str
 
 
 class VentaConDetalles(VentaResponse):

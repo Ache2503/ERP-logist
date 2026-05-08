@@ -6,13 +6,14 @@ from fastapi import APIRouter, Depends, Query, status, Path
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
+from app.core.security import require_role
 from app.services.venta_service import VentaService
 from app.schemas.ventas import (
     VentaCreate, VentaUpdate,
     VentaResponse, VentaConDetalles, VentaListResponse,
 )
 
-router = APIRouter(prefix="/ventas", tags=["Ventas"])
+router = APIRouter(prefix="/ventas", tags=["Ventas"], dependencies=[Depends(require_role(["Administrador","Vendedor","Gerente","Contador"]))])
 
 
 @router.get("", response_model=VentaListResponse, summary="Listar ventas")

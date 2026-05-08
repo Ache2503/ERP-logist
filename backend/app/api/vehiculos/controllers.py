@@ -1,17 +1,16 @@
-"""
-Controllers — Vehículos
-"""
+"""Controllers — Vehículos"""
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
+from app.core.security import require_role
 from app.services.vehiculo_service import VehiculoService
 from app.schemas.vehiculos import (
     VehiculoCreate, VehiculoUpdate,
     VehiculoResponse, VehiculoConRelaciones, VehiculoListResponse,
 )
 
-router = APIRouter(prefix="/vehiculos", tags=["Transporte"])
+router = APIRouter(prefix="/vehiculos", tags=["Transporte"], dependencies=[Depends(require_role(["Administrador","Transportista","Gerente"]))])
 
 
 @router.get("", response_model=VehiculoListResponse, summary="Listar vehículos")
@@ -59,17 +58,6 @@ def eliminar(id_vehiculo: int, db: Session = Depends(get_db)):
     VehiculoService(db).eliminar(id_vehiculo)
 
 
-@router.get("/conductor/{id_conductor}", response_model=list[VehiculoResponse],
-            summary="Listar vehículos de un conductor")
-def listar_por_conductor(
-    id_conductor: int,
-    skip: int  = Query(0, ge=0),
-    limit: int = Query(100, ge=1, le=500),
-    db: Session = Depends(get_db),
-):
-    return VehiculoService(db).listar_por_conductor(id_conductor, skip, limit)
-
-
 @router.get("/tipo/{id_tipo_vehiculo}", response_model=list[VehiculoResponse],
             summary="Listar vehículos por tipo")
 def listar_por_tipo(
@@ -79,14 +67,3 @@ def listar_por_tipo(
     db: Session = Depends(get_db),
 ):
     return VehiculoService(db).listar_por_tipo(id_tipo_vehiculo, skip, limit)
-
-
-@router.get("/estado/{estado}", response_model=list[VehiculoResponse],
-            summary="Listar vehículos por estado (activo/inactivo/mantenimiento)")
-def listar_por_estado(
-    estado: str,
-    skip: int  = Query(0, ge=0),
-    limit: int = Query(100, ge=1, le=500),
-    db: Session = Depends(get_db),
-):
-    return VehiculoService(db).listar_por_estado(estado, skip, limit)

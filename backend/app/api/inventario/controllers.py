@@ -6,13 +6,14 @@ from fastapi import APIRouter, Depends, Query, status, Path
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
+from app.core.security import require_role
 from app.services.inventario_service import InventarioService
 from app.schemas.inventario import (
     InventarioCreate, InventarioUpdate, InventarioAjuste,
     InventarioResponse, InventarioListResponse,
 )
 
-router = APIRouter(prefix="/inventario", tags=["Inventario"])
+router = APIRouter(prefix="/inventario", tags=["Inventario"], dependencies=[Depends(require_role(["Administrador","Almacenista","Gerente"]))])
 
 
 @router.get("", response_model=InventarioListResponse, summary="Listar inventario")

@@ -1,5 +1,18 @@
 import { useState, useEffect } from 'react';
 
+function getAuthHeaders() {
+  const token = localStorage.getItem('token');
+  const headers = { 'Content-Type': 'application/json' };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  return headers;
+}
+
+function normalizeUrl(url) {
+  return url.replace(/\/+$/, '');
+}
+
 export function useApi(url, options = {}) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -10,7 +23,13 @@ export function useApi(url, options = {}) {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`${url}?skip=${skip}&limit=${limit}`)
+    const normalizedUrl = normalizeUrl(url);
+    const urlObj = new URL(normalizedUrl, window.location.origin);
+    urlObj.searchParams.set('skip', skip);
+    urlObj.searchParams.set('limit', limit);
+    fetch(urlObj.toString(), {
+      headers: getAuthHeaders()
+    })
       .then(res => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
@@ -28,3 +47,5 @@ export function useApi(url, options = {}) {
 
   return { data, loading, error, total, skip, limit, setSkip };
 }
+
+export { getAuthHeaders };

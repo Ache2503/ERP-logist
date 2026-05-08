@@ -46,3 +46,5 @@ from .envio_detalle import EnvioDetalle
 from .guia_remision_detalle import GuiaRemisionDetalle
 from .ruta_envio import RutaEnvio
 from .seguimiento_envio import SeguimientoEnvio
+from .incidentes import Incidentes
+from .resenas import Resenas

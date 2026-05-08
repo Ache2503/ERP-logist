@@ -1,39 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useApi } from '../hooks/useApi';
+import { useApi, getAuthHeaders } from '../hooks/useApi';
 import { useAuth } from '../hooks/useAuth';
-
-const columnas = [
-  { key: 'id_empleado', label: 'ID' },
-  { key: 'nombre', label: 'Nombre', render: (row) => `${row.nombre || ''} ${row.apellido || ''}` },
-  { key: 'email', label: 'Email' },
-  { key: 'cargo', label: 'Cargo' },
-  { 
-    key: 'estatus', 
-    label: 'Estatus',
-    render: (row) => (
-      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-        row.estatus === 'activo' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-      }`}>
-        {row.estatus}
-      </span>
-    )
-  },
-  { 
-    key: 'acciones', 
-    label: 'Acciones',
-    render: (row) => (
-      <button
-        onClick={() => handleSetPassword(row.id_empleado, row.nombre, row.apellido)}
-        className="text-blue-600 hover:text-blue-800 text-sm"
-      >
-        Cambiar Pass
-      </button>
-    )
-  },
-];
+import DataTable from './DataTable';
 
 export default function EmpleadosTable() {
-  const { data, loading, error, total, skip, limit, setSkip } = useApi('http://localhost:8000/empleados/');
+  const { data, loading, error, total, skip, limit, setSkip } = useApi('http://localhost:8000/empleados');
   const { empleado: currentUser } = useAuth();
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
@@ -47,6 +18,36 @@ export default function EmpleadosTable() {
   const [submitSuccess, setSubmitSuccess] = useState('');
   const [passwordModal, setPasswordModal] = useState({ show: false, id: null, nombre: '', password: '' });
 
+  const columnas = [
+    { key: 'id_empleado', label: 'ID' },
+    { key: 'nombre', label: 'Nombre', render: (row) => `${row.nombre || ''} ${row.apellido || ''}` },
+    { key: 'email', label: 'Email' },
+    { key: 'cargo', label: 'Cargo' },
+    { 
+      key: 'estatus', 
+      label: 'Estatus',
+      render: (row) => (
+        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+          row.estatus === 'activo' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+        }`}>
+          {row.estatus}
+        </span>
+      )
+    },
+    { 
+      key: 'acciones', 
+      label: 'Acciones',
+      render: (row) => (
+        <button
+          onClick={() => handleSetPassword(row.id_empleado, row.nombre, row.apellido)}
+          className="text-blue-600 hover:text-blue-800 text-sm"
+        >
+          Cambiar Pass
+        </button>
+      )
+    },
+  ];
+
   const handleSetPassword = (id, nombre, apellido) => {
     setPasswordModal({ show: true, id, nombre: `${nombre} ${apellido}`, password: '' });
   };
@@ -58,7 +59,7 @@ export default function EmpleadosTable() {
     try {
       const response = await fetch(`http://localhost:8000/empleados/${passwordModal.id}/set-password`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders(),
         body: JSON.stringify({ password: passwordModal.password }),
       });
 
@@ -80,9 +81,9 @@ export default function EmpleadosTable() {
     setSubmitSuccess('');
 
     try {
-      const response = await fetch('http://localhost:8000/empleados/', {
+      const response = await fetch('http://localhost:8000/empleados', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders(),
         body: JSON.stringify({
           ...formData,
           fecha_registro: new Date().toISOString().split('T')[0]
@@ -272,60 +273,6 @@ export default function EmpleadosTable() {
           </div>
         </div>
       )}
-    </div>
-  );
-}
-
-function DataTable({ columns, data, loading, error, total, skip, limit, onPageChange }) {
-  if (loading) return <p className="text-center py-4">Cargando...</p>;
-  if (error) return <p className="text-red-500">Error: {error}</p>;
-  if (!data || data.length === 0) return <p>No hay registros.</p>;
-
-  return (
-    <div>
-      <div className="overflow-x-auto bg-white shadow rounded">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              {columns.map(col => (
-                <th key={col.key} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  {col.label}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {data.map((row, i) => (
-              <tr key={row.id_empleado || i} className="hover:bg-gray-50">
-                {columns.map(col => (
-                  <td key={col.key} className="px-6 py-4 whitespace-nowrap text-sm">
-                    {col.render ? col.render(row) : row[col.key]}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <div className="flex justify-between mt-4">
-        <button
-          onClick={() => onPageChange(Math.max(0, skip - limit))}
-          disabled={skip === 0}
-          className="px-4 py-2 bg-white border rounded shadow disabled:opacity-50"
-        >
-          Anterior
-        </button>
-        <span className="text-sm text-gray-600">
-          Página {Math.floor(skip/limit)+1} de {Math.ceil(total/limit)}
-        </span>
-        <button
-          onClick={() => onPageChange(skip + limit)}
-          disabled={skip + limit >= total}
-          className="px-4 py-2 bg-white border rounded shadow disabled:opacity-50"
-        >
-          Siguiente
-        </button>
-      </div>
     </div>
   );
 }

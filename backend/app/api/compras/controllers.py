@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, Query, status, Path
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
+from app.core.security import require_role
 from app.services.compra_service import CompraService
 from app.schemas.compras import (
     CompraCreate, CompraUpdate,
@@ -13,7 +14,7 @@ from app.schemas.compras import (
     CompraDetalleResponse, CompraDetalleConProducto,
 )
 
-router = APIRouter(prefix="/compras", tags=["Compras"])
+router = APIRouter(prefix="/compras", tags=["Compras"], dependencies=[Depends(require_role(["Administrador","Contador","Gerente"]))])
 
 
 # ════════════════════════════════════════════════════════════════

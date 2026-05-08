@@ -31,3 +31,24 @@ class ConductorListResponse(BaseModel):
     skip: int
     limit: int
     data: list[ConductorResponse]
+
+
+class ConductorEnvioResponse(BaseModel):
+    """Envío asignado a un conductor con datos del pedido"""
+    model_config = ConfigDict(from_attributes=True)
+    id_asignacion: int
+    id_envio: int
+    id_pedido_cliente: int
+    id_cliente: Optional[int] = None
+    cliente_nombre: Optional[str] = None
+    total_pedido: Optional[float] = None
+    estatus_envio: Optional[str] = None
+    estatus_pedido: Optional[str] = None
+    fecha_asignacion: Optional[str] = None
+    requiere_envio: Optional[int] = None
+
+
+class ConductorEnvioListResponse(BaseModel):
+    """Respuesta paginada de envíos asignados a un conductor"""
+    total: int
+    data: list[ConductorEnvioResponse]

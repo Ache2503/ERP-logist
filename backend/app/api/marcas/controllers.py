@@ -1,13 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.core.database import get_db
+from app.core.security import require_role
 from app.services.marca_service import MarcaService
 from app.schemas.marcas import MarcaCreate, MarcaUpdate, MarcaResponse
 
-router = APIRouter(prefix="/marcas", tags=["Marcas"])
+router = APIRouter(prefix="/marcas", tags=["Marcas"], dependencies=[Depends(require_role(["Administrador","Vendedor","Almacenista","Gerente"]))])
 
 
-@router.get("/", response_model=list[MarcaResponse])
+@router.get("", response_model=list[MarcaResponse])
 def listar(db: Session = Depends(get_db)):
     service = MarcaService(db)
     return service.listar()
@@ -24,7 +25,7 @@ def obtener(marca_id: int, db: Session = Depends(get_db)):
     return marca
 
 
-@router.post("/", response_model=MarcaResponse, status_code=201)
+@router.post("", response_model=MarcaResponse, status_code=201)
 def crear(data: MarcaCreate, db: Session = Depends(get_db)):
     service = MarcaService(db)
     return service.crear(data)

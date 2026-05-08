@@ -39,3 +39,4 @@ class PedidosClientes(Base):
     envios: Mapped[list['Envios']] = relationship('Envios', back_populates='pedidos_clientes')
     guia_remision: Mapped[list['GuiaRemision']] = relationship('GuiaRemision', back_populates='pedidos_clientes')
     pedido_cliente_detalle: Mapped[list['PedidoClienteDetalle']] = relationship('PedidoClienteDetalle', back_populates='pedidos_clientes')
+    resenas: Mapped[list['Resenas']] = relationship('Resenas', back_populates='pedidos_clientes')

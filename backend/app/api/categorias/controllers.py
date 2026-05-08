@@ -2,24 +2,25 @@
 api/categorias/controllers.py
 """
 
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session  
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
 from app.core.database import get_db
+from app.core.security import require_role
 from app.services.categoria_service import CategoriaService
 from app.schemas.categorias import (
     CategoriaCreate, CategoriaUpdate,
     CategoriaResponse, CategoriaListResponse,
 )
-router = APIRouter(prefix="/categorias", tags=["Categorías"])
+router = APIRouter(prefix="/categorias", tags=["Categorías"], dependencies=[Depends(require_role(["Administrador","Vendedor","Almacenista","Gerente"]))])
 
-@router.get("/", response_model=CategoriaListResponse)
+@router.get("", response_model=CategoriaListResponse)
 def listar(skip: int = 0, limit: int = 100,
            db: Session = Depends(get_db)):
     service = CategoriaService(db)
     return service.listar(skip=skip, limit=limit)
 
 
-@router.post("/", response_model=CategoriaResponse, status_code=201)
+@router.post("", response_model=CategoriaResponse, status_code=201)
 def crear(categoria_in: CategoriaCreate,
           db: Session = Depends(get_db)):
     service = CategoriaService(db)

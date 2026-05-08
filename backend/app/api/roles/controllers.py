@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
+from app.core.security import require_admin
 from app.services.rol_service import RolService
 from app.schemas.roles import (
     RolCreate, RolUpdate, RolResponse, RolConPermisos,
@@ -13,7 +14,7 @@ from app.schemas.roles import (
     AsignarPermisoRequest, AsignarRolRequest, EmpleadoRolResponse,
 )
 
-router = APIRouter(tags=["Roles & Permisos"])
+router = APIRouter(tags=["Roles & Permisos"], dependencies=[Depends(require_admin())])
 
 
 # ════════════════════════════════════════════════════════════════

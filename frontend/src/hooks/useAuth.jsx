@@ -1,19 +1,23 @@
-import { useState, useEffect, useContext, createContext } from 'react';
+import { useState, useEffect, useContext, createContext, useCallback } from 'react';
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [empleado, setEmpleado] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('token'));
+  const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedEmpleado = localStorage.getItem('empleado');
     const storedToken = localStorage.getItem('token');
-    if (storedEmpleado && storedToken) {
-      setEmpleado(JSON.parse(storedEmpleado));
-      setToken(storedToken);
+    const storedEmpleado = localStorage.getItem('empleado');
+
+    if (!storedToken || !storedEmpleado) {
+      setLoading(false);
+      return;
     }
+
+    setToken(storedToken);
+    setEmpleado(JSON.parse(storedEmpleado));
     setLoading(false);
   }, []);
 

@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, Query, status, Path
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
+from app.core.security import require_role
 from app.services.pedido_cliente_service import PedidoClienteService
 from app.schemas.pedidos_clientes import (
     PedidoClienteCreate, PedidoClienteUpdate,
@@ -13,7 +14,7 @@ from app.schemas.pedidos_clientes import (
     PedidoClienteListResponse, PedidoClienteDetalleResponse,
 )
 
-router = APIRouter(prefix="/pedidos-clientes", tags=["Pedidos Clientes"])
+router = APIRouter(prefix="/pedidos-clientes", tags=["Pedidos Clientes"], dependencies=[Depends(require_role(["Administrador","Vendedor","Gerente"]))])
 
 
 @router.get("", response_model=PedidoClienteListResponse, summary="Listar pedidos")

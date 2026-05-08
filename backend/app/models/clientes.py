@@ -23,4 +23,5 @@ class Clientes(Base):
     rfc: Mapped[Optional[str]] = mapped_column(String(13))
 
     pedidos_clientes: Mapped[list['PedidosClientes']] = relationship('PedidosClientes', back_populates='clientes')
+    resenas: Mapped[list['Resenas']] = relationship('Resenas', back_populates='clientes')
 

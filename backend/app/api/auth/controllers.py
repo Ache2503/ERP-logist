@@ -13,7 +13,7 @@ router = APIRouter(
 
 
 @router.post("/login", response_model=Token)
-async def login(credentials: EmpleadoLogin, db: Session = Depends(get_db)):
+def login(credentials: EmpleadoLogin, db: Session = Depends(get_db)):
     """Login de usuario"""
     service = EmpleadoService(db)
     empleado = service.authenticate(credentials.email, credentials.password)
@@ -46,12 +46,12 @@ async def login(credentials: EmpleadoLogin, db: Session = Depends(get_db)):
 
 
 @router.post("/logout")
-async def logout():
+def logout():
     """Logout de usuario"""
     return {"message": "Logout exitoso"}
 
 
 @router.get("/me")
-async def get_me():
+def get_me():
     """Obtener información del usuario actual (por implementar con JWT)"""
     return {"message": "Endpoint para obtener usuario actual - Por implementar"}

@@ -5,13 +5,14 @@ from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
+from app.core.security import require_role
 from app.services.almacen_service import AlmacenService
 from app.schemas.almacenes import (
     AlmacenCreate, AlmacenUpdate,
     AlmacenResponse, AlmacenConRelaciones, AlmacenListResponse,
 )
 
-router = APIRouter(prefix="/almacenes", tags=["Almacenes"])
+router = APIRouter(prefix="/almacenes", tags=["Almacenes"], dependencies=[Depends(require_role(["Administrador","Almacenista","Gerente"]))])
 
 
 @router.get("", response_model=AlmacenListResponse, summary="Listar almacenes")

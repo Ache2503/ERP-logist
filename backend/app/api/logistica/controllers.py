@@ -6,13 +6,14 @@ from fastapi import APIRouter, Depends, Query, status, Path
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
+from app.core.security import require_role
 from app.services.logistica_service import LogisticaService
 from app.schemas.logistica import (
     EnvioCreate, EnvioUpdate,
     EnvioResponse, EnvioConDetalles, EnvioListResponse,
 )
 
-router = APIRouter(prefix="/logistica", tags=["Logística"])
+router = APIRouter(prefix="/logistica", tags=["Logística"], dependencies=[Depends(require_role(["Administrador","Transportista","Gerente"]))])
 
 
 # ════════════════════════════════════════════════════════════════

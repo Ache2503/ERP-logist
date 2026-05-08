@@ -35,3 +35,5 @@ class Empleados(Base):
     traslados_internos: Mapped[list['TrasladosInternos']] = relationship('TrasladosInternos', back_populates='empleados')
     envios: Mapped[list['Envios']] = relationship('Envios', back_populates='empleados')
     conductores: Mapped[list['Conductores']] = relationship('Conductores', back_populates='empleados')
+    incidentes: Mapped[list['Incidentes']] = relationship('Incidentes', back_populates='empleados')
+    resenas: Mapped[list['Resenas']] = relationship('Resenas', back_populates='empleados')

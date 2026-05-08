@@ -164,7 +164,8 @@ class EmpleadoService:
         data = {
             "sub": str(empleado.id_empleado),
             "email": empleado.email,
-            "nombre": f"{empleado.nombre} {empleado.apellido}"
+            "nombre": f"{empleado.nombre} {empleado.apellido}",
+            "cargo": empleado.cargo or "Empleado",
         }
         return create_access_token(data)
 

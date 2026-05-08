@@ -9,6 +9,7 @@ from app.repositories.conductor_repository import ConductorRepository
 from app.schemas.conductores import (
     ConductorCreate, ConductorUpdate,
     ConductorResponse, ConductorListResponse,
+    ConductorEnvioResponse, ConductorEnvioListResponse,
 )
 from app.models.empleados import Empleados
 
@@ -82,6 +83,10 @@ class ConductorService:
                 detail=f"Ya existe un conductor con esa licencia"
             )
         
+        # Actualizar cargo del empleado a Transportista
+        emp.cargo = 'Transportista'
+        self.repo.db.commit()
+        
         conductor = self.repo.create(data)
         return ConductorResponse(
             id_empleado=conductor.id_empleado,
@@ -128,6 +133,14 @@ class ConductorService:
                 detail=f"Conductor {id_empleado} no encontrado"
             )
         self.repo.delete(conductor)
+
+    def listar_envios_asignados(self, id_empleado: int) -> ConductorEnvioListResponse:
+        """Listar envíos asignados a un conductor"""
+        data = self.repo.get_envios_asignados(id_empleado)
+        return ConductorEnvioListResponse(
+            total=len(data),
+            data=[ConductorEnvioResponse(**d) for d in data]
+        )
 
     def _get_empleado(self, db, id_empleado: int):
         return db.query(Empleados).filter(

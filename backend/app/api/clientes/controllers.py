@@ -5,13 +5,14 @@ from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
+from app.core.security import require_role
 from app.services.cliente_service import ClienteService
 from app.schemas.clientes import (
     ClienteCreate, ClienteUpdate,
     ClienteResponse, ClienteListResponse,
 )
 
-router = APIRouter(prefix="/clientes", tags=["Clientes"])
+router = APIRouter(prefix="/clientes", tags=["Clientes"], dependencies=[Depends(require_role(["Administrador","Vendedor","Gerente"]))])
 
 
 # ── CRUD ──────────────────────────────────────────────────────────

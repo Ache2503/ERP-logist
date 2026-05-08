@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
+from app.core.security import require_role, require_admin
 from app.services.empleado_service import EmpleadoService
 from app.services.rol_service import RolService
 from app.schemas.empleados import (
@@ -12,8 +13,9 @@ from app.schemas.empleados import (
     EmpleadoResponse, EmpleadoListResponse,
 )
 from app.schemas.roles import EmpleadoRolResponse, AsignarRolRequest
+from app.schemas.empleados import PasswordChange
 
-router = APIRouter(prefix="/empleados", tags=["Empleados"])
+router = APIRouter(prefix="/empleados", tags=["Empleados"], dependencies=[Depends(require_role(["Administrador","Gerente","Transportista"]))])
 
 
 # ── CRUD ──────────────────────────────────────────────────────────
@@ -72,6 +74,14 @@ def actualizar(id_empleado: int, data: EmpleadoUpdate,
                summary="Eliminar empleado")
 def eliminar(id_empleado: int, db: Session = Depends(get_db)):
     EmpleadoService(db).eliminar(id_empleado)
+
+
+# ── Contraseña ────────────────────────────────────────────────────
+@router.put("/{id_empleado}/set-password", response_model=EmpleadoResponse,
+            summary="Establecer/cambiar contraseña del empleado")
+def set_password(id_empleado: int, data: PasswordChange,
+                 db: Session = Depends(get_db)):
+    return EmpleadoService(db).set_password(id_empleado, data.password)
 
 
 # ── Estatus rápido ────────────────────────────────────────────────

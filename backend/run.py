@@ -24,6 +24,7 @@ from app.api.compras.controllers import router as compras_router
 from app.api.pedidos_clientes.controllers import router as pedidos_clientes_router
 from app.api.inventario.controllers import router as inventario_router
 from app.api.conductores.controllers import router as conductores_router
+from app.api.reportes.controllers import router as reportes_router
 
 app = FastAPI(
     title=settings.app_name,
@@ -47,6 +48,7 @@ app = FastAPI(
         {"name": "Ventas"},
         {"name": "Logística"},
         {"name": "Pedidos Clientes"},
+        {"name": "Reportes"},
     ],
 )
 
@@ -77,6 +79,7 @@ app.include_router(compras_router)
 app.include_router(pedidos_clientes_router)
 app.include_router(inventario_router)
 app.include_router(conductores_router)
+app.include_router(reportes_router)
 
 
 @app.get("/", tags=["General"])

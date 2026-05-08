@@ -4,13 +4,14 @@ Controllers - tipos_vehiculos
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 from app.core.database import get_db
+from app.core.security import require_role
 from app.services.tipo_vehiculo_service import TipoVehiculoService
 from app.schemas.tipos_vehiculos import (
     TipoVehiculoCreate, TipoVehiculoUpdate,
     TipoVehiculoResponse, TipoVehiculoListResponse,
 )
 
-router = APIRouter(prefix="/tipos-vehiculos", tags=["Transporte"])
+router = APIRouter(prefix="/tipos-vehiculos", tags=["Transporte"], dependencies=[Depends(require_role(["Administrador","Transportista","Gerente"]))])
 
 @router.get("", response_model=TipoVehiculoListResponse, summary="Listar tipos de vehículos")
 def listar(
